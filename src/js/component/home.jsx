@@ -1,25 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
+import List from "./List";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 const Home = () => {
+	
+	const [input, setInput] = useState("")
+	const [list, setList] = useState([])
+
+	const textChange = (event) => {
+		setInput(event.target.value)
+	}
+
+	const sendList = (event) => {
+		if(event.key === "Enter" && input.trim()){
+			setList([...list, input])
+			setInput("")
+		}
+	}
+
+	const deleteItem = (index) => {
+		setList(list.filter((_,i) => i !== index))
+	}
+
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
+		<section className="section">
+			<h1>TODO-list</h1>
+			<div className="ul-section">
+				<ul>
+					<input
+						className="input"
+						type="text"
+						value={input}
+						onChange={textChange}
+						onKeyDown={sendList}
+					/>
+					{list.map((item, index) => {
+						return(
+							<List 
+								key={index} 
+								text={item}
+								onDelete={() => deleteItem(index)}
+							/>
+						)
+					})}
+				</ul>
+				<div className="items-left">
+					{list.length > 0 ? `${list.length} items left` : "No items left, add items"}
+				</div>
+			</div>
+		</section>
 	);
 };
 
